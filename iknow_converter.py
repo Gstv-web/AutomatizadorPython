@@ -1,6 +1,5 @@
 from report_converter import ReportConverterInterface
 from report import Report
-import pandas as pd
 
 class IknowConverter(ReportConverterInterface):
 
@@ -8,25 +7,33 @@ class IknowConverter(ReportConverterInterface):
     def convert_report(self, report: Report):
         self.cast_sent_report(report.sent_file)
         self.cast_received_report(report.received_file)
+        self.writer.set_styles()
+        # self.writer.remove_55_from_numbers()
+        # self.writer.edit_date()
+        # self.writer.edit_status()
+        # self.writer.remove_duplicates()
+        self.writer.remove_blacklist_numbers()
+        self.writer.remove_blank_messages()
         self.writer.save()
 
     def cast_sent_report(self, sent_file_name):
-        sent_file = pd.read_csv(sent_file_name, sep=';')
-        sent_file.rename(columns={'Número': 'NÚMERO', 'data de envio': 'DATA', 'status': 'STATUS'}, inplace=True)
-        sent_file = sent_file[['NÚMERO', 'STATUS', 'DATA']]
-        numero = str(sent_file['NÚMERO'])
-        status = str(sent_file['STATUS'])
-        data = str(sent_file['DATA'])
-        self.writer.write_sent_message(numero, status, data)
-
-
-
+        _file = open(sent_file_name, 'r')
+        next(_file)
+        for line in _file:
+            [numero, status, data_envio, data_recebimento, data_leitura] = line.split(";")
+            if numero not in self.sent_numbers:
+                self.sent_numbers.append(numero)
+                self.writer.remove_blacklist_numbers()
+                self.writer.write_sent_message(numero, "Enviado", self.fix_date(data_envio))
+        
 
     def cast_received_report(self, received_file_name):
-        received_file = pd.read_csv(received_file_name, sep=';', names=['TELEFONE', 'MENSAGEM'])
-        numero = str(received_file['TELEFONE'])
-        mensagem = str(received_file['MENSAGEM'])
-        self.writer.write_received_message(numero, mensagem)
+        _file = open(received_file_name, 'r', encoding='utf-8')
+        # next(_file) # Preciso verificar essa linha, que apaga 
+        for line in _file:
+            [telefone, mensagem] = line.split(";")
+            self.writer.write_received_message(telefone, mensagem)
+        
 
 
 

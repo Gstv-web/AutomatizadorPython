@@ -6,6 +6,7 @@ class ReportWriter:
 
     SENT_SHEET_NAME = "RELATÓRIO"
     RECEIVED_SHEET_NAME = "RESPOSTAS"
+    INTERACTION_SHEET_NAME = "INTERAÇÃO"
 
     def __init__(self, file_name):
         self.workbook = None
@@ -21,26 +22,60 @@ class ReportWriter:
         self.sent_sheet.title = ReportWriter.SENT_SHEET_NAME
         #self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
         self.received_sheet = self.workbook.create_sheet(ReportWriter.RECEIVED_SHEET_NAME)
+        self.insert_sent_header()
+        self.insert_received_header()
         self.set_styles()
 
     def set_sent_styles(self):
         self.sent_sheet.column_dimensions['A'].width = 17
         self.sent_sheet.column_dimensions['B'].width = 14
         self.sent_sheet.column_dimensions['C'].width = 14
+        for rows in self.sent_sheet.iter_rows(min_row=1):
+            for cell in rows:
+                cell.alignment = Alignment(horizontal='center')
+        thin_border = Border(left=Side(style='thin'),
+                            right=Side(style='thin'),
+                            top=Side(style='thin'),
+                            bottom=Side(style='thin'))
+        for col in self.sent_sheet.iter_cols(min_row=1, min_col=1, max_col=3):
+            for cell in col:
+                cell.border = thin_border
 
     def set_received_styles(self):
         self.received_sheet.column_dimensions['A'].width = 17
         self.received_sheet.column_dimensions['B'].width = 300
+        for rows in self.received_sheet.iter_rows(min_row=1):
+            for cell in rows:
+                cell.alignment = Alignment(horizontal='center')
+        thin_border = Border(left=Side(style='thin'),
+                            right=Side(style='thin'),
+                            top=Side(style='thin'),
+                            bottom=Side(style='thin'))
+        for col in self.received_sheet.iter_cols(min_row=1, min_col=1, max_col=2):
+            for cell in col:
+                cell.border = thin_border
 
     def set_styles(self):
         self.set_received_styles()
         self.set_sent_styles()
 
+    def fix_number(self, number):
+        if '55' in number and len(number) >= 12:
+            number = number.lstrip('55')
+        if "(" ")" " " in number:
+            number = number.replace("(", "").replace(")", "").replace(" ", "")
+        return number
+
+
+
     def write_sent_message(self, number, status, sent_date):
-        self.sent_sheet.append([number, status, sent_date])
+        number = self.fix_number(number)
+        self.sent_sheet.append([number, sent_date, status])
 
     def write_received_message(self, number, received_text):
+        number = self.fix_number(number)
         self.received_sheet.append([number, received_text])
+
 
     def insert_sent_header(self):
         self.sent_sheet.insert_rows(0)
@@ -48,10 +83,74 @@ class ReportWriter:
         self.sent_sheet['B1'] = 'DATA'
         self.sent_sheet['C1'] = 'STATUS'
 
-    # def insert_received_header(self):  
-    #     self.received_sheet.insert_rows(0)
-    #     self.received_sheet['A1'] = 'TELEFONE'
-    #     self.received_sheet['B1'] = 'MENSAGEM'
+    def insert_received_header(self):  
+        self.received_sheet.insert_rows(0)
+        self.received_sheet['A1'] = 'TELEFONE'
+        self.received_sheet['B1'] = 'MENSAGEM'
+
+
+    # def remove_55_from_numbers(self):
+    #     for col in self.sent_sheet.iter_cols(min_row=2, min_col=1, max_col=1):
+    #         for cell in col:
+    #             new_number = str(cell.value)
+    #             if '55' in cell.value:
+    #                 new_number = new_number.lstrip('55')
+    #                 cell.value = new_number
+    #     for col in self.received_sheet.iter_cols(min_row=1, min_col=1, max_col=1):
+    #         for cell in col:
+    #             new_number = str(cell.value)
+    #             if '55' in cell.value:
+    #                 new_number = new_number.lstrip('55')
+    #                 cell.value = new_number
+
+    # def remove_duplicates(self): # não é isso
+    #     col_numbers = []
+    #     for row in self.sent_sheet.iter_rows(min_row=2, min_col=1, max_col=1):
+    #         for cell in row:
+    #             col_numbers.append(cell.value)
+    #     for row in self.sent_sheet.iter_rows(min_row=2, min_col=1, max_col=1):
+    #         for cell in row:        
+    #             if cell.value not in col_numbers:
+    #                 self.sent_sheet.delete_rows(cell.row)  
+
+    # def edit_date(self):
+    #     for col in self.sent_sheet.iter_cols(min_row=2, min_col=2, max_col=2):
+    #         for cell in col:
+    #             celula = str(cell.value)  # aqui eu acessei o valor da célula, agora eu posso alterar o valor
+    #             dateSet = celula.split()
+    #             justDate = dateSet[0]
+    #             if '"' in justDate:
+    #                 justDate = justDate.replace('"', '')
+    #             justDate.replace("\"", "") # Aqui eu acesso apenas a data
+    #             cell.value = justDate
+
+    # def edit_status(self):
+    #     new_status = 'Enviado'
+    #     for col in self.sent_sheet.iter_cols(min_row=2, min_col=3, max_col=3):
+    #         for cell in col:
+    #             cell.value = new_status
+
+    def remove_blacklist_numbers(self):
+        blacklist = ['71983155252', '62993984240', '11986884500',
+                     '21997610334', '62985553937', '11997399665',
+                     '47999905666', '11967243506', '11939390655',
+                     '89988169173', '11995458123', '41996166105',
+                     '11996384589', '71991810512', '47999474163',
+                     '11977826644', '11997965365', '11980831080',
+                     '11982026091', '11995556294', '71991770338',
+                     '11996869475']
+            
+        for col in self.sent_sheet.iter_cols(min_row=2, min_col=1, max_col=1):
+            for cell in col:
+                if cell.value in blacklist:
+                    self.sent_sheet.delete_rows(cell.row)
+        
+
+    def remove_blank_messages(self):
+        for col in self.received_sheet.iter_cols(min_row=2, min_col=2, max_col=2):
+            for cell in col:
+                if cell.value == '\n':
+                    self.received_sheet.delete_rows(cell.row)
 
     def save(self):
         self.workbook.save(self.file_name)
