@@ -14,9 +14,18 @@ class ReportConverterInterface(ABC):
     
     def fix_date(self, date): # Alcance usa o formato aaaa-mm-dd - Verificar
         date = date.split(" ")
-        if '"' in date[0]:
-            date[0] = date[0].replace('"', '')
-        return date[0]
+        date[0] = date[0].replace('"', '')
+        if "-" in date[0]:
+            pre_date = date[0].split("-")
+            print(len(pre_date[0]))
+            if len(pre_date[0]) == 4:
+                pre_date.reverse()
+                bar = "/".join(pre_date)
+                new_date = bar
+                
+                return new_date
+        else:        
+            return date[0]
 
     def fix_status(self, status):
         new_status = "Enviado"
@@ -25,9 +34,7 @@ class ReportConverterInterface(ABC):
         return status
 
     def fix_number(self, number):
-        number = str()
-        if "(" ")" " " in number:
-            number = number.replace("(", "").replace(")", "").replace(" ", "")
+        number = number.replace("(", "").replace(")", "").replace(" ", "").replace("-", "")
         if '55' in number and len(number) >= 12:
             number = number.lstrip('55')
         return number

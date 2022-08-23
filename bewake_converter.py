@@ -18,6 +18,8 @@ class BewakeConverter(ReportConverterInterface):
             _reader = csv.reader(csvfile, delimiter=';')
             next(_reader)
             for [codigo, entrada_em, programado_em, enviado_em, numero, celular, tipo, status, servico, operadora, whatsapp, campanha, resposta, duracao] in _reader:
+                if "NUMERO INVALIDO" in status:
+                    continue
                 if celular not in self.sent_numbers:
                     self.sent_numbers.append(celular)
                     self.writer.remove_blacklist_numbers()

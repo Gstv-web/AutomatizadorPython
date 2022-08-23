@@ -55,25 +55,23 @@ class ReportWriter:
             for cell in col:
                 cell.border = thin_border
 
-    def set_styles(self):
-        self.set_received_styles()
-        self.set_sent_styles()
-
-    def fix_number(self, number):
+    def fix_number(self):
         if '55' in number and len(number) >= 12:
             number = number.lstrip('55')
         if "(" ")" " " in number:
             number = number.replace("(", "").replace(")", "").replace(" ", "")
-        return number
-
-
+    
+    def set_styles(self):
+        self.set_received_styles()
+        self.set_sent_styles()
+        
 
     def write_sent_message(self, number, status, sent_date):
-        number = self.fix_number(number)
+ 
         self.sent_sheet.append([number, sent_date, status])
 
     def write_received_message(self, number, received_text):
-        number = self.fix_number(number)
+        
         self.received_sheet.append([number, received_text])
 
 
@@ -113,16 +111,16 @@ class ReportWriter:
     #             if cell.value not in col_numbers:
     #                 self.sent_sheet.delete_rows(cell.row)  
 
-    # def edit_date(self):
-    #     for col in self.sent_sheet.iter_cols(min_row=2, min_col=2, max_col=2):
-    #         for cell in col:
-    #             celula = str(cell.value)  # aqui eu acessei o valor da célula, agora eu posso alterar o valor
-    #             dateSet = celula.split()
-    #             justDate = dateSet[0]
-    #             if '"' in justDate:
-    #                 justDate = justDate.replace('"', '')
-    #             justDate.replace("\"", "") # Aqui eu acesso apenas a data
-    #             cell.value = justDate
+    def edit_date(self):
+        for col in self.sent_sheet.iter_cols(min_row=2, min_col=2, max_col=2):
+            for cell in col:
+                celula = str(cell.value)  # aqui eu acessei o valor da célula, agora eu posso alterar o valor
+                dateSet = celula.split()
+                justDate = dateSet[0]
+                if '"' in justDate:
+                    justDate = justDate.replace('"', '')
+                justDate.replace("\"", "") # Aqui eu acesso apenas a data
+                cell.value = justDate
 
     # def edit_status(self):
     #     new_status = 'Enviado'
