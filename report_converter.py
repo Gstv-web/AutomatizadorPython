@@ -17,7 +17,6 @@ class ReportConverterInterface(ABC):
         date[0] = date[0].replace('"', '')
         if "-" in date[0]:
             pre_date = date[0].split("-")
-            print(len(pre_date[0]))
             if len(pre_date[0]) == 4:
                 pre_date.reverse()
                 bar = "/".join(pre_date)

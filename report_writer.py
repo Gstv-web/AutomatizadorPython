@@ -1,5 +1,5 @@
 from openpyxl import Workbook
-from openpyxl.styles import Alignment, Border, Side
+from openpyxl.styles import Alignment, Border, Side, Font
 
 
 class ReportWriter:
@@ -30,6 +30,9 @@ class ReportWriter:
         self.sent_sheet.column_dimensions['A'].width = 17
         self.sent_sheet.column_dimensions['B'].width = 14
         self.sent_sheet.column_dimensions['C'].width = 14
+        self.sent_sheet['A1'].font = Font(bold=True)
+        self.sent_sheet['B1'].font = Font(bold=True)
+        self.sent_sheet['C1'].font = Font(bold=True)
         for rows in self.sent_sheet.iter_rows(min_row=1):
             for cell in rows:
                 cell.alignment = Alignment(horizontal='center')
@@ -44,6 +47,8 @@ class ReportWriter:
     def set_received_styles(self):
         self.received_sheet.column_dimensions['A'].width = 17
         self.received_sheet.column_dimensions['B'].width = 300
+        self.received_sheet['A1'].font = Font(bold=True)
+        self.received_sheet['B1'].font = Font(bold=True)
         for rows in self.received_sheet.iter_rows(min_row=1):
             for cell in rows:
                 cell.alignment = Alignment(horizontal='center')
@@ -66,7 +71,7 @@ class ReportWriter:
         self.set_sent_styles()
         
 
-    def write_sent_message(self, number, status, sent_date):
+    def write_sent_message(self, number, sent_date, status):
  
         self.sent_sheet.append([number, sent_date, status])
 
@@ -147,7 +152,7 @@ class ReportWriter:
     def remove_blank_messages(self):
         for col in self.received_sheet.iter_cols(min_row=2, min_col=2, max_col=2):
             for cell in col:
-                if cell.value == '\n':
+                if cell.value == '\n' or cell.value == None:
                     self.received_sheet.delete_rows(cell.row)
 
     def save(self):
