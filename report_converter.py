@@ -28,7 +28,7 @@ class ReportConverterInterface(ABC):
 
     def fix_status(self, status):
         new_status = "Enviado"
-        if status == "SUCESSO" or status == "RECEBIDO SUCESSO":
+        if status == "SUCESSO" or status == "RECEBIDO SUCESSO" or status == "Yes":
             status = new_status
         return status
 
