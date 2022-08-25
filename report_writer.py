@@ -23,10 +23,12 @@ class ReportWriter:
         self.sent_sheet.title = ReportWriter.SENT_SHEET_NAME
         # self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
         self.received_sheet = self.workbook.create_sheet(ReportWriter.RECEIVED_SHEET_NAME)
-        # self.interaction_sheet = self.workbook.create_sheet(ReportWriter.INTERACTION_SHEET_NAME)
         self.insert_sent_header()
         self.insert_received_header()
         self.set_styles()
+
+    def create_interaction_sheet(self):
+        self.interaction_sheet = self.workbook.create_sheet(ReportWriter.INTERACTION_SHEET_NAME)
 
     def set_sent_styles(self):
         self.sent_sheet.column_dimensions['A'].width = 17
@@ -62,6 +64,20 @@ class ReportWriter:
             for cell in col:
                 cell.border = thin_border
 
+    # def set_interaction_styles(self):
+    #     for rows in self.interaction_sheet.iter_cols(min_row=1, min_col=1):
+    #         for cell in rows:
+                
+    #             cell.alignment = Alignment(horizontal='center')
+    #     thin_border = Border(left=Side(style='thin'),
+    #                         right=Side(style='thin'),
+    #                         top=Side(style='thin'),
+    #                         bottom=Side(style='thin'))
+    #     for col in self.interaction_sheet.iter_cols(min_row=1, min_col=1, max_col=2):
+    #         for cell in col:
+    #             cell.border = thin_border
+                
+
     def fix_number(self):
         if '55' in number and len(number) >= 12:
             number = number.lstrip('55')
@@ -71,7 +87,6 @@ class ReportWriter:
     def set_styles(self):
         self.set_received_styles()
         self.set_sent_styles()
-        
 
     def write_sent_message(self, number, sent_date, status):
  
@@ -81,8 +96,23 @@ class ReportWriter:
         
         self.received_sheet.append([number, received_text])
     
-    def write_interaction_message(self):
-        self.interaction_sheet = self.workbook.create_sheet(ReportWriter.INTERACTION_SHEET_NAME)
+    def write_interaction_message(self, values):
+        # self.interaction_sheet = self.workbook.create_sheet(ReportWriter.INTERACTION_SHEET_NAME)
+        self.interaction_sheet.append(values)
+        self.interaction_sheet['A1'] = 'TELEFONE'
+        for row in self.interaction_sheet.iter_rows(min_row=1, max_row=1, min_col=1):
+            for cell in row:
+                cell.font = Font(bold=True)
+        for rows in self.interaction_sheet.iter_cols(min_row=1, min_col=1):
+            for cell in rows:
+                cell.alignment = Alignment(horizontal='center')
+        thin_border = Border(left=Side(style='thin'),
+                            right=Side(style='thin'),
+                            top=Side(style='thin'),
+                            bottom=Side(style='thin'))
+        for col in self.interaction_sheet.iter_cols(min_row=1, min_col=1):
+            for cell in col:
+                cell.border = thin_border
 
 
     def insert_sent_header(self):
@@ -96,6 +126,7 @@ class ReportWriter:
         self.received_sheet['A1'] = 'TELEFONE'
         self.received_sheet['B1'] = 'MENSAGEM'
 
+    
 
     # def remove_55_from_numbers(self):
     #     for col in self.sent_sheet.iter_cols(min_row=2, min_col=1, max_col=1):
@@ -109,17 +140,8 @@ class ReportWriter:
     #             new_number = str(cell.value)
     #             if '55' in cell.value:
     #                 new_number = new_number.lstrip('55')
-    #                 cell.value = new_number
+    #                 cell.value = new_number 
 
-    # def remove_duplicates(self): # não é isso
-    #     col_numbers = []
-    #     for row in self.sent_sheet.iter_rows(min_row=2, min_col=1, max_col=1):
-    #         for cell in row:
-    #             col_numbers.append(cell.value)
-    #     for row in self.sent_sheet.iter_rows(min_row=2, min_col=1, max_col=1):
-    #         for cell in row:        
-    #             if cell.value not in col_numbers:
-    #                 self.sent_sheet.delete_rows(cell.row)  
 
     def edit_date(self):
         for col in self.sent_sheet.iter_cols(min_row=2, min_col=2, max_col=2):

@@ -33,7 +33,7 @@ class ReportConverterInterface(ABC):
         return status
 
     def fix_number(self, number):
-        number = number.replace("(", "").replace(")", "").replace(" ", "").replace("-", "")
-        if '55' in number and len(number) >= 12:
-            number = number.lstrip('55')
+        number = number.replace("(", "").replace(")", "").replace(" ", "").replace("-", "").replace("+", "")    
+        if '55' in number:
+            number = number[2:]
         return number

@@ -47,7 +47,7 @@ def find_next_pending_report():
     sent_file = os.path.join("Entrada", "iKnow", "RCS", "Enviados", "relatorio_mensagens_enviadas.csv")
     received_file = os.path.join("Entrada", "iKnow", "RCS", "Recebidos", "relatorio_mensagens_recebidas.csv")
     interaction_file = os.path.join("Entrada", "iKnow", "RCS", "Interacoes", "relatorio_iteracoes.csv")
-    pending_report = Report(sent_file, received_file, interaction_file, Report.SUPPLIER_IKNOW)
+    pending_report = Report(sent_file, received_file, Report.SUPPLIER_IKNOW, interaction_file)
 
     return pending_report
 

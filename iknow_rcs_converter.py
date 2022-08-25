@@ -34,6 +34,8 @@ class IknowRCSConverter(ReportConverterInterface):
 
     def cast_interaction_report(self, interaction_file_name):
         with open(interaction_file_name) as csvfile:
-            _reader = csv.reader(csvfile, delimiter=';')
+            _reader = csv.reader(csvfile, delimiter=',')
+            self.writer.create_interaction_sheet()
             for row in _reader:
-                print(row)
+                number = self.fix_number(row[0])
+                self.writer.write_interaction_message([*[number],*row[1:]])
