@@ -13,6 +13,7 @@ class ReportWriter:
         self.file_name = None
         self.sent_sheet = None
         self.received_sheet = None
+        self.interaction_sheet = None
         self.file_name = file_name
         self.init_writer()
 
@@ -20,8 +21,9 @@ class ReportWriter:
         self.workbook = Workbook()
         self.sent_sheet = self.workbook.active
         self.sent_sheet.title = ReportWriter.SENT_SHEET_NAME
-        #self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
+        # self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
         self.received_sheet = self.workbook.create_sheet(ReportWriter.RECEIVED_SHEET_NAME)
+        # self.interaction_sheet = self.workbook.create_sheet(ReportWriter.INTERACTION_SHEET_NAME)
         self.insert_sent_header()
         self.insert_received_header()
         self.set_styles()
@@ -78,6 +80,9 @@ class ReportWriter:
     def write_received_message(self, number, received_text):
         
         self.received_sheet.append([number, received_text])
+    
+    def write_interaction_message(self):
+        self.interaction_sheet = self.workbook.create_sheet(ReportWriter.INTERACTION_SHEET_NAME)
 
 
     def insert_sent_header(self):

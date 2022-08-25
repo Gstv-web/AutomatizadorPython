@@ -3,7 +3,6 @@ from report import Report
 
 class IknowConverter(ReportConverterInterface):
 
-
     def convert_report(self, report: Report):
         self.cast_sent_report(report.sent_file)
         self.cast_received_report(report.received_file)
