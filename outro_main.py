@@ -9,6 +9,7 @@ from ligdata_converter import LigdataConverter
 from bewake_converter import BewakeConverter
 from atmosfera_converter import AtmosferaConverter
 from iknow_rcs_converter import IknowRCSConverter
+from N8_converter import N8Converter
 from report_writer import ReportWriter
 
 def find_next_pending_report():
@@ -44,10 +45,15 @@ def find_next_pending_report():
     # pending_report = Report(sent_file, received_file, Report.SUPPLIER_ATMOSFERA)
     
     ### IKNOW RCS ###
-    sent_file = os.path.join("Entrada", "iKnow", "RCS", "Enviados", "relatorio_mensagens_enviadas.csv")
-    received_file = os.path.join("Entrada", "iKnow", "RCS", "Recebidos", "relatorio_mensagens_recebidas.csv")
-    interaction_file = os.path.join("Entrada", "iKnow", "RCS", "Interacoes", "relatorio_iteracoes.csv")
-    pending_report = Report(sent_file, received_file, Report.SUPPLIER_IKNOW, interaction_file)
+    # sent_file = os.path.join("Entrada", "iKnow", "RCS", "Enviados", "relatorio_mensagens_enviadas.csv")
+    # received_file = os.path.join("Entrada", "iKnow", "RCS", "Recebidos", "relatorio_mensagens_recebidas.csv")
+    # interaction_file = os.path.join("Entrada", "iKnow", "RCS", "Interacoes", "relatorio_iteracoes.csv")
+    # pending_report = Report(sent_file, received_file, Report.SUPPLIER_IKNOW, interaction_file)
+
+    ### N8 (URA) ###
+    activation_file = os.path.join("Entrada", "N8", "Report01.csv")
+    interaction_file = os.path.join("Entrada", "N8", "Report01.csv")
+    pending_report = Report(interaction_file, activation_file, Report.SUPPLIER_N8, interaction_file, activation_file)
 
     return pending_report
 
@@ -58,9 +64,10 @@ def update_report_file(pending_report: Report):
     # writer = ReportWriter("./Saida/Ligdata/finalizado.xlsx") # Ligdata
     # writer = ReportWriter("./Saida/Bewake/finalizado.xlsx") # Bewake
     # writer = ReportWriter("./Saida/Atmosfera/finalizado.xlsx") # Atmosfera
-    writer = ReportWriter("./Saida/iKnow/RCS/finalizado.xlsx") # iKnow RCS
+    # writer = ReportWriter("./Saida/iKnow/RCS/finalizado.xlsx") # iKnow RCS
+    writer = ReportWriter("./Saida/N8/finalizado.xlsx") # N8 (URA)
     
-    if pending_report.supplier == Report.SUPPLIER_IKNOW:
+    if pending_report.supplier == Report.SUPPLIER_N8:
         # ic = IknowConverter(writer)
         # ic.convert_report(pending_report)
 
@@ -76,8 +83,11 @@ def update_report_file(pending_report: Report):
         # atc = AtmosferaConverter(writer)
         # atc.convert_report(pending_report)
 
-        irc = IknowRCSConverter(writer)
-        irc.convert_report(pending_report)
+        # irc = IknowRCSConverter(writer)
+        # irc.convert_report(pending_report)
+        
+        n8 = N8Converter(writer)
+        n8.convert_report(pending_report)
 
 
 def main():

@@ -7,6 +7,9 @@ class ReportWriter:
     SENT_SHEET_NAME = "RELATÓRIO"
     RECEIVED_SHEET_NAME = "RESPOSTAS"
     INTERACTION_SHEET_NAME = "INTERAÇÃO"
+    ACTIVATION_SHEET_NAME = "Ativação"
+    CALL_INTERACTION_SHEET_NAME = "Interação"
+
 
     def __init__(self, file_name):
         self.workbook = None
@@ -14,6 +17,8 @@ class ReportWriter:
         self.sent_sheet = None
         self.received_sheet = None
         self.interaction_sheet = None
+        self.activation_sheet = None
+        self.call_interaction_sheet = None
         self.file_name = file_name
         self.init_writer()
 
@@ -29,6 +34,12 @@ class ReportWriter:
 
     def create_interaction_sheet(self):
         self.interaction_sheet = self.workbook.create_sheet(ReportWriter.INTERACTION_SHEET_NAME)
+
+    def create_activation_sheet(self):
+        self.activation_sheet = self.workbook.create_sheet(ReportWriter.ACTIVATION_SHEET_NAME)
+    
+    def create_call_interaction_sheet(self):
+        self.call_interaction_sheet = self.workbook.create_sheet(ReportWriter.CALL_INTERACTION_SHEET_NAME)
 
     def set_sent_styles(self):
         self.sent_sheet.column_dimensions['A'].width = 17
@@ -76,6 +87,8 @@ class ReportWriter:
     #     for col in self.interaction_sheet.iter_cols(min_row=1, min_col=1, max_col=2):
     #         for cell in col:
     #             cell.border = thin_border
+
+
                 
 
     def fix_number(self):
@@ -114,6 +127,8 @@ class ReportWriter:
             for cell in col:
                 cell.border = thin_border
 
+    def write_activation_message(self, values):
+        self.activation_sheet.append(values)
 
     def insert_sent_header(self):
         self.sent_sheet.insert_rows(0)
