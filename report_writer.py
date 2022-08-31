@@ -130,6 +130,9 @@ class ReportWriter:
     def write_activation_message(self, values):
         self.activation_sheet.append(values)
 
+    def write_call_interaction_message(self, values):
+        self.call_interaction_sheet.append(values)
+
     def insert_sent_header(self):
         self.sent_sheet.insert_rows(0)
         self.sent_sheet['A1'] = 'TELEFONE'

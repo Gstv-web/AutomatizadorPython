@@ -3,7 +3,7 @@ from report import Report
 
 class AlcanceConverter(ReportConverterInterface):
 
-    def convert_report(self, report: Report):
+    def convert_wpp_report(self, report: Report):
         self.cast_sent_report(report.sent_file)
         self.cast_received_report(report.received_file)
         self.writer.set_styles()
@@ -26,3 +26,10 @@ class AlcanceConverter(ReportConverterInterface):
         for line in _file:
             [contato, dt_envio, resp] = line.split(";")
             self.writer.write_received_message(contato, resp)
+            
+
+    def convert_rcs_report(self, sent_file_name, received_file_name, interaction_file_name):
+        pass
+
+    def convert_ura_report(self, activation_file_name, call_interaction_file_name):
+        pass

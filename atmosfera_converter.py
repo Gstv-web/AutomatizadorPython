@@ -5,7 +5,7 @@ from openpyxl import load_workbook
 
 class AtmosferaConverter(ReportConverterInterface):
 
-    def convert_report(self, report:Report):
+    def convert_wpp_report(self, report:Report):
         self.cast_sent_report(report.sent_file)
         self.cast_received_report(report.received_file)
         self.writer.set_styles()
@@ -45,3 +45,10 @@ class AtmosferaConverter(ReportConverterInterface):
         next(zip(phone_val, message_val))
         for p, m in zip(phone_val, message_val):
             self.writer.write_received_message(self.fix_number(str(p)), m)
+
+    
+    def convert_rcs_report(self, sent_file_name, received_file_name, interaction_file_name):
+        pass
+
+    def convert_ura_report(self, activation_file_name, call_interaction_file_name):
+        pass

@@ -4,7 +4,7 @@ import csv
 
 class BewakeConverter(ReportConverterInterface):
 
-    def convert_report(self, report: Report):
+    def convert_wpp_report(self, report: Report):
         self.cast_sent_report(report.sent_file)
         self.cast_received_report(report.received_file)
         self.writer.set_styles()
@@ -37,3 +37,10 @@ class BewakeConverter(ReportConverterInterface):
                         pass
                     else:
                         self.writer.write_received_message(numero, resposta)
+
+
+    def convert_rcs_report(self, sent_file_name, received_file_name, interaction_file_name):
+        pass
+
+    def convert_ura_report(self, activation_file_name, call_interaction_file_name):
+        pass

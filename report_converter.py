@@ -9,7 +9,15 @@ class ReportConverterInterface(ABC):
         self.writer = writer
         
     @abstractmethod
-    def convert_report(self, sent_file_name, received_file_name, interaction_file_name=None):
+    def convert_wpp_report(self, sent_file_name, received_file_name):
+        pass
+
+    @abstractmethod
+    def convert_rcs_report(self, sent_file_name, received_file_name, interaction_file_name):
+        pass
+
+    @abstractmethod
+    def convert_ura_report(self, activation_file_name, call_interaction_file_name):
         pass
     
     def fix_date(self, date): # Alcance usa o formato aaaa-mm-dd - Verificar
