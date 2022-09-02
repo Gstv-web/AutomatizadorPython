@@ -1,12 +1,13 @@
-from report_converter import ReportConverterInterface
+from ura_report_converter import URAReportConverterInterface
 from ura_report import URAReport
 import csv
 
-class N8Converter(ReportConverterInterface):
+class N8Converter(URAReportConverterInterface):
 
     def convert_ura_report(self, report: URAReport):
         self.cast_activation_report(report.activation_file)
         self.cast_call_interaction_report(report.call_interaction_file)
+        self.writer.remove_sent_sheet()
         self.writer.save()
 
 
@@ -44,6 +45,7 @@ class N8Converter(ReportConverterInterface):
         with open(call_interaction_file_name) as csvfile:
             _reader = csv.reader(csvfile, delimiter=';')
             self.writer.create_call_interaction_sheet()
+            self.writer.remove_sent_sheet()
             date = []
             phone = []
             duration = []
@@ -67,10 +69,3 @@ class N8Converter(ReportConverterInterface):
             
             for i in fields:
                 self.writer.write_activation_message(fields)
-
-
-    def convert_wpp_report(self, sent_file_name, received_file_name):
-        pass
-
-    def convert_rcs_report(self, sent_file_name, received_file_name, interaction_file_name):
-        pass

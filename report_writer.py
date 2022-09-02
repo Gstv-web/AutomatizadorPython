@@ -32,10 +32,18 @@ class ReportWriter:
         self.insert_received_header()
         self.set_styles()
 
+    # def create_sent_sheet(self):
+    #     self.sent_sheet = self.workbook.active
+    #     self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
+
+    def create_received_sheet(self):
+        self.received_sheet = self.workbook.create_sheet(ReportWriter.RECEIVED_SHEET_NAME)
+
     def create_interaction_sheet(self):
         self.interaction_sheet = self.workbook.create_sheet(ReportWriter.INTERACTION_SHEET_NAME)
 
     def create_activation_sheet(self):
+        # self.activation_sheet = self.workbook.active
         self.activation_sheet = self.workbook.create_sheet(ReportWriter.ACTIVATION_SHEET_NAME)
     
     def create_call_interaction_sheet(self):
@@ -199,6 +207,11 @@ class ReportWriter:
             for cell in col:
                 if cell.value == '\n' or cell.value == None:
                     self.received_sheet.delete_rows(cell.row)
+
+    def remove_sent_sheet(self):
+        # self.workbook.get_sheet_names()
+        to_del = self.workbook.get_sheet_by_name('RELATÓRIO')
+        self.workbook.remove_sheet(to_del)
 
     def save(self):
         self.workbook.save(self.file_name)

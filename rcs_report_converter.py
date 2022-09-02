@@ -1,18 +1,17 @@
 from abc import ABC, abstractmethod
 from report_writer import ReportWriter
 
-
-class ReportConverterInterface(ABC):
+class RCSReportConverterInterface(ABC):
 
     def __init__(self, writer: ReportWriter):
         self.sent_numbers = []
         self.writer = writer
-        
+    
     @abstractmethod
-    def convert_wpp_report(self, sent_file_name, received_file_name):
+    def convert_rcs_report(self, sent_file_name, received_file_name, interaction_file_name):
         pass
 
-    
+
     def fix_date(self, date): # Alcance usa o formato aaaa-mm-dd - Verificar
         date = date.split(" ")
         date[0] = date[0].replace('"', '')

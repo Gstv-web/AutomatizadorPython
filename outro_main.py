@@ -6,6 +6,7 @@ from report import Report
 from rcs_report import RCSReport
 from ura_report import URAReport
 from iknow_converter import IknowConverter
+from iknow_rcs_converter import IknowRCSConverter
 from alcance_converter import AlcanceConverter
 from ligdata_converter import LigdataConverter
 from bewake_converter import BewakeConverter
@@ -84,7 +85,7 @@ def update_report_file(pending_report: URAReport):
         # atc = AtmosferaConverter(writer)
         # atc.convert_report(pending_report)
 
-        # irc = IknowConverter(writer)
+        # irc = IknowRCSConverter(writer)
         # irc.convert_rcs_report(pending_report)
         
         n8 = N8Converter(writer)
