@@ -24,17 +24,22 @@ class ReportWriter:
 
     def init_writer(self):
         self.workbook = Workbook()
-        self.sent_sheet = self.workbook.active
-        self.sent_sheet.title = ReportWriter.SENT_SHEET_NAME
+        # self.sent_sheet = self.workbook.active
+        # self.sent_sheet.title = ReportWriter.SENT_SHEET_NAME
         # self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
-        self.received_sheet = self.workbook.create_sheet(ReportWriter.RECEIVED_SHEET_NAME)
-        self.insert_sent_header()
-        self.insert_received_header()
-        self.set_styles()
+        # self.received_sheet = self.workbook.create_sheet(ReportWriter.RECEIVED_SHEET_NAME)
+        # self.insert_sent_header()
+        # self.insert_received_header()
+        # self.set_styles()
+        self.activation_sheet = self.workbook.active
+        self.activation_sheet.title = ReportWriter.ACTIVATION_SHEET_NAME
+        self.call_interaction_sheet = self.workbook.create_sheet(ReportWriter.CALL_INTERACTION_SHEET_NAME)
+        self.insert_activation_header()
 
-    # def create_sent_sheet(self):
-    #     self.sent_sheet = self.workbook.active
-    #     self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
+
+        
+    def create_sent_sheet(self):
+        self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
 
     def create_received_sheet(self):
         self.received_sheet = self.workbook.create_sheet(ReportWriter.RECEIVED_SHEET_NAME)
@@ -43,7 +48,6 @@ class ReportWriter:
         self.interaction_sheet = self.workbook.create_sheet(ReportWriter.INTERACTION_SHEET_NAME)
 
     def create_activation_sheet(self):
-        # self.activation_sheet = self.workbook.active
         self.activation_sheet = self.workbook.create_sheet(ReportWriter.ACTIVATION_SHEET_NAME)
     
     def create_call_interaction_sheet(self):
@@ -81,6 +85,25 @@ class ReportWriter:
                             bottom=Side(style='thin'))
         for col in self.received_sheet.iter_cols(min_row=1, min_col=1, max_col=2):
             for cell in col:
+                cell.border = thin_border
+    
+
+    def set_activation_styles(self):
+        self.activation_sheet['A1'].font = Font(bold=True)
+        self.activation_sheet['B1'].font = Font(bold=True)
+        self.activation_sheet['C1'].font = Font(bold=True)
+        self.activation_sheet['D1'].font = Font(bold=True)
+        self.activation_sheet.column_dimensions['A'].width = 17
+        self.activation_sheet.column_dimensions['B'].width = 14
+        self.activation_sheet.column_dimensions['C'].width = 14
+        self.activation_sheet.column_dimensions['D'].width = 14
+        thin_border = Border(left=Side(style='thin'),
+                            right=Side(style='thin'),
+                            top=Side(style='thin'),
+                            bottom=Side(style='thin'))
+        for row in self.activation_sheet.iter_rows(min_row=1, min_col=1):
+            for cell in row:
+                cell.alignment = Alignment(horizontal='center')
                 cell.border = thin_border
 
     # def set_interaction_styles(self):
@@ -137,6 +160,8 @@ class ReportWriter:
 
     def write_activation_message(self, values):
         self.activation_sheet.append(values)
+        
+        
 
     def write_call_interaction_message(self, values):
         self.call_interaction_sheet.append(values)
@@ -152,7 +177,12 @@ class ReportWriter:
         self.received_sheet['A1'] = 'TELEFONE'
         self.received_sheet['B1'] = 'MENSAGEM'
 
-    
+    def insert_activation_header(self):
+        self.activation_sheet.insert_rows(0)
+        self.activation_sheet['A1'] = 'TELEFONE'
+        self.activation_sheet['B1'] = 'DATA'
+        self.activation_sheet['C1'] = 'DURAÇÃO'
+        self.activation_sheet['D1'] = 'STATUS'
 
     # def remove_55_from_numbers(self):
     #     for col in self.sent_sheet.iter_cols(min_row=2, min_col=1, max_col=1):
@@ -208,10 +238,6 @@ class ReportWriter:
                 if cell.value == '\n' or cell.value == None:
                     self.received_sheet.delete_rows(cell.row)
 
-    def remove_sent_sheet(self):
-        # self.workbook.get_sheet_names()
-        to_del = self.workbook.get_sheet_by_name('RELATÓRIO')
-        self.workbook.remove_sheet(to_del)
 
     def save(self):
         self.workbook.save(self.file_name)

@@ -27,9 +27,3 @@ class AlcanceConverter(ReportConverterInterface):
             [contato, dt_envio, resp] = line.split(";")
             self.writer.write_received_message(contato, resp)
             
-
-    def convert_rcs_report(self, sent_file_name, received_file_name, interaction_file_name):
-        pass
-
-    def convert_ura_report(self, activation_file_name, call_interaction_file_name):
-        pass
