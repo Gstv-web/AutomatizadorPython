@@ -7,7 +7,9 @@ class N8Converter(URAReportConverterInterface):
     def convert_ura_report(self, report: URAReport):
         self.cast_activation_report(report.activation_file)
         self.cast_call_interaction_report(report.call_interaction_file)
+        # self.writer.sort_activation_data()
         self.writer.set_activation_styles()
+        self.writer.set_call_interaction_styles()
         self.writer.save()
 
 
@@ -17,21 +19,22 @@ class N8Converter(URAReportConverterInterface):
             next(_reader)
             # self.writer.create_activation_sheet()
             # self.writer.insert_activation_header()
+
+            atendidos = []
+            fallido = []
+            no_atendidos = []
+            ocupado = []
+            sin_llamar = []
             for row in _reader:
                 
-                atendido = []
-                no_atendido = []
-                ocupado = []
-                sin_llamar =[]
-
-                # if '' in row[0][:] and row[12] != 'Atendido':
+            
                 if '' in row[0][:] and row[12] == 'Atendido':
-                    number = self.fix_number(row[6])
-                    date = self.fix_date(row[0])
-                    duration = row[11]
-                    status = row[12]
-                    # atendido.append([number, date, duration, status])
-                    self.writer.write_activation_message([number, date, duration, status])
+                    number = self.fix_number(str(row[6]))
+                    date = self.fix_date(str(row[0]))
+                    duration = str(row[11])
+                    status = str(row[12])
+                    atendidos.append([number, date, duration, status])
+                    #self.writer.write_activation_message(atendido)
                 
                 
                 if '' in row[0][:] and row[12] == 'No Atendido':
@@ -39,45 +42,64 @@ class N8Converter(URAReportConverterInterface):
                     date = self.fix_date(row[0])
                     duration = row[11]
                     status = row[12]
-                    # no_atendido.append([number, date, duration, status])
-                    self.writer.write_activation_message([number, date, duration, status])
+                    no_atendidos.append([number, date, duration, status])
+                    #self.writer.write_activation_message(no_atendido)
                 
                 if '' in row[0][:] and row[12] == 'Ocupado':
                     number = self.fix_number(row[6])
                     date = self.fix_date(row[0])
                     duration = row[11]
                     status = row[12]
-                    #ocupado.append([number, date, duration, status])
-                    self.writer.write_activation_message([number, date, duration, status])
+                    ocupado.append([number, date, duration, status])
+                    # self.writer.write_activation_message([number, date, duration, status])
                
                 if '' in row[0][:] and row[12] == 'Sin Llamar':
                     number = self.fix_number(row[6])
                     date = self.fix_date(row[0])
                     duration = row[11]
                     status = row[12]
-                    #sin_llamar.append([number, date, duration, status])
-                    self.writer.write_activation_message([number, date, duration, status])
-            
+                    sin_llamar.append([number, date, duration, status])
+                    # self.writer.write_activation_message([number, date, duration, status])
+                
+                if '' in row[0][:] and row[12] == 'Fallido':
+                    number = self.fix_number(row[6])
+                    date = self.fix_date(row[0])
+                    duration = row[11]
+                    status = row[12]
+                    sin_llamar.append([number, date, duration, status])
+                    # self.writer.write_activation_message([number, date, duration, status])
+
+            for i in range(len(atendidos)):
+                self.writer.write_activation_message(atendidos[i])
+
+            for i in range(len(fallido)):
+                self.writer.write_activation_message(fallido[i])
+
+            for i in range(len(no_atendidos)):
+                self.writer.write_activation_message(no_atendidos[i])
+
+            for i in range(len(ocupado)):
+                self.writer.write_activation_message(ocupado[i])
+
+            for i in range(len(sin_llamar)):
+                self.writer.write_activation_message(sin_llamar[i])
+
                 
     def cast_call_interaction_report(self, call_interaction_file_name):
         with open(call_interaction_file_name) as csvfile:
             _reader = csv.reader(csvfile, delimiter=';')
             # self.writer.create_call_interaction_sheet()
-            date = []
-            phone = []
-            duration = []
-            status = []
-            for row in _reader:
+            fixed_values = []
+            for i, row in enumerate(_reader):                 
+                
+                if i == 0:
+                    number = row[6]
+                    date = row[0]
+                    self.writer.write_call_interaction_message([*[number], *[date], *row[30:]])
+                if '' in row[0][:] and row[12] == 'Atendido' and row[30] != '':
+                    number = self.fix_number(row[6])
+                    date = self.fix_date(row[0])
 
-                if '' in row[0][:] and row[12] != 'Atendido':
-                    pass
-                else:
-                    pre_date = row[0][:]
-                    pre_phone = row[6][2:]
-                    pre_duration = row[11]
-                    pre_status = row[12]
-                    date.append(pre_date)
-                    phone.append(pre_phone)
-                    duration.append(pre_duration)
-                    status.append(pre_status)
+                    self.writer.write_call_interaction_message([*[number], *[date], *row[30:]])
+                
                     

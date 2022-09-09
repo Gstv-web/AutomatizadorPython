@@ -53,8 +53,8 @@ def find_next_pending_report():
     # pending_report = RCSReport(sent_file, received_file, interaction_file, RCSReport.SUPPLIER_IKNOW)
 
     ### N8 (URA) ###
-    activation_file = os.path.join("Entrada", "N8", "Report01.csv")
-    call_interaction_file = os.path.join("Entrada", "N8", "Report01.csv")
+    activation_file = os.path.join("Entrada", "N8", "Report02.csv")
+    call_interaction_file = os.path.join("Entrada", "N8", "Report02.csv")
     pending_report = URAReport(activation_file, call_interaction_file, URAReport.SUPPLIER_N8)
 
     return pending_report

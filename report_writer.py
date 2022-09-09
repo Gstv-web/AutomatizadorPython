@@ -105,6 +105,30 @@ class ReportWriter:
             for cell in row:
                 cell.alignment = Alignment(horizontal='center')
                 cell.border = thin_border
+    
+    def set_call_interaction_styles(self):
+        for row in self.call_interaction_sheet.iter_rows(min_row=1, max_row=1):
+            for cell in row:
+                cell.font = Font(bold=True)
+        self.call_interaction_sheet['A1'] = 'TELEFONE'
+        self.call_interaction_sheet['B1'] = 'DATA'
+        self.call_interaction_sheet.column_dimensions['A'].width = 17
+        self.call_interaction_sheet.column_dimensions['B'].width = 14
+        thin_border = Border(left=Side(style='thin'),
+                            right=Side(style='thin'),
+                            top=Side(style='thin'),
+                            bottom=Side(style='thin'))
+        for row in self.call_interaction_sheet.iter_rows(min_row=1, min_col=1):
+            for cell in row:
+                cell.alignment = Alignment(horizontal='center')
+                cell.border = thin_border
+        for col in self.call_interaction_sheet.iter_cols(min_col=4):
+            for cell in col:
+                if cell.value == '':
+                    new_val = '-'
+                    cell.value = new_val
+                    
+
 
     # def set_interaction_styles(self):
     #     for rows in self.interaction_sheet.iter_cols(min_row=1, min_col=1):
@@ -160,8 +184,7 @@ class ReportWriter:
 
     def write_activation_message(self, values):
         self.activation_sheet.append(values)
-        
-        
+           
 
     def write_call_interaction_message(self, values):
         self.call_interaction_sheet.append(values)
