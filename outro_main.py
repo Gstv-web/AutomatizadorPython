@@ -12,6 +12,8 @@ from ligdata_converter import LigdataConverter
 from bewake_converter import BewakeConverter
 from atmosfera_converter import AtmosferaConverter
 from N8_converter import N8Converter
+from talkip_converter import TalkipConverter
+from talk_converter import TalkConverter
 from report_writer import ReportWriter
 
 def find_next_pending_report():
@@ -53,9 +55,19 @@ def find_next_pending_report():
     # pending_report = RCSReport(sent_file, received_file, interaction_file, RCSReport.SUPPLIER_IKNOW)
 
     ### N8 (URA) ###
-    activation_file = os.path.join("Entrada", "N8", "Report02.csv")
-    call_interaction_file = os.path.join("Entrada", "N8", "Report02.csv")
-    pending_report = URAReport(activation_file, call_interaction_file, URAReport.SUPPLIER_N8)
+    # activation_file = os.path.join("Entrada", "N8", "Angra-URA.csv")
+    # call_interaction_file = os.path.join("Entrada", "N8", "Angra-URA.csv")
+    # pending_report = URAReport(activation_file, call_interaction_file, URAReport.SUPPLIER_N8)
+
+    ### Talkip (URA) ###
+    # activation_file = os.path.join("Entrada", "Talkip", "discagem", "relatorio_discagem_Trilha 2-Base Nicolau-Filtered2-20k-22-08-2022.csv")
+    # call_interaction_file = os.path.join("Entrada", "Talkip", "Interacao", "relatorio_interacao_Trilha2-Base Nicolau-Filtered2-20k-22-08-2022.csv")
+    # pending_report = URAReport(activation_file, call_interaction_file, URAReport.SUPPLIER_TALKIP)
+
+    ### Talk (URA) ###
+    activation_file = os.path.join("Entrada", "Talk", "Talk - URA.xls")
+    call_interaction_file = os.path.join("Entrada", "Talk", "Talk - URA.xls")
+    pending_report = URAReport(activation_file, call_interaction_file, URAReport.SUPPLIER_TALK)
 
     return pending_report
 
@@ -67,9 +79,11 @@ def update_report_file(pending_report: URAReport):
     # writer = ReportWriter("./Saida/Bewake/finalizado.xlsx") # Bewake
     # writer = ReportWriter("./Saida/Atmosfera/finalizado.xlsx") # Atmosfera
     # writer = ReportWriter("./Saida/iKnow/RCS/finalizado.xlsx") # iKnow RCS
-    writer = ReportWriter("./Saida/N8/finalizado.xlsx") # N8 (URA)
-    
-    if pending_report.supplier == URAReport.SUPPLIER_N8:
+    # writer = ReportWriter("./Saida/N8/finalizado.xlsx") # N8 (URA)
+    # writer = ReportWriter("./Saida/Talkip/finalizado.xlsx") # Talkip (URA)
+    writer = ReportWriter("./Saida/Talk/finalizado.xlsx") # Talk (URA)
+
+    if pending_report.supplier == URAReport.SUPPLIER_TALK:
         # ic = IknowConverter(writer)
         # ic.convert_report(pending_report)
 
@@ -88,9 +102,14 @@ def update_report_file(pending_report: URAReport):
         # irc = IknowRCSConverter(writer)
         # irc.convert_rcs_report(pending_report)
         
-        n8 = N8Converter(writer)
-        n8.convert_ura_report(pending_report)
+        # n8 = N8Converter(writer)
+        # n8.convert_ura_report(pending_report)
 
+        # tkp = TalkipConverter(writer)
+        # tkp.convert_ura_report(pending_report)
+
+        tk = TalkConverter(writer)
+        tk.convert_ura_report(pending_report)
 
 def main():
     pending_report = find_next_pending_report()

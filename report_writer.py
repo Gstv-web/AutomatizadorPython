@@ -26,7 +26,7 @@ class ReportWriter:
         self.workbook = Workbook()
         # self.sent_sheet = self.workbook.active
         # self.sent_sheet.title = ReportWriter.SENT_SHEET_NAME
-        # self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
+        # # self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
         # self.received_sheet = self.workbook.create_sheet(ReportWriter.RECEIVED_SHEET_NAME)
         # self.insert_sent_header()
         # self.insert_received_header()
@@ -187,7 +187,7 @@ class ReportWriter:
            
 
     def write_call_interaction_message(self, values):
-        self.call_interaction_sheet.append(values)
+        self.call_interaction_sheet.append([values])
 
     def insert_sent_header(self):
         self.sent_sheet.insert_rows(0)

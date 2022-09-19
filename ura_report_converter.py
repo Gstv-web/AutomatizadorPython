@@ -36,6 +36,6 @@ class URAReportConverterInterface(ABC):
 
     def fix_number(self, number):
         number = number.replace("(", "").replace(")", "").replace(" ", "").replace("-", "").replace("+", "")    
-        if '55' in number:
-            number = number[2:]
+        # if '55' in number[0:1]:
+        #     number = number[2:]
         return number

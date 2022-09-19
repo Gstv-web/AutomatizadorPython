@@ -11,6 +11,7 @@ class IknowRCSConverter(RCSReportConverterInterface):
         self.writer.set_styles()
         self.writer.remove_blacklist_numbers()
         self.writer.remove_blank_messages()
+        self.write_csv(report.interaction_file)
         self.writer.save()
 
     
@@ -40,3 +41,14 @@ class IknowRCSConverter(RCSReportConverterInterface):
             for row in _reader:
                 number = self.fix_number(row[0])
                 self.writer.write_interaction_message([*[number],*row[1:]])
+    
+
+    def write_csv(self, interaction_file_name):
+        f = open("teste_rcs.csv", "w", newline="")
+        with open(interaction_file_name) as csvfile:
+            _reader = csv.reader(csvfile, delimiter=',')
+            self.writer.create_interaction_sheet()
+            for row in _reader:
+                number = self.fix_number(row[0])
+                writer = csv.writer(f)
+                writer.writerow([number, *row[1:]])

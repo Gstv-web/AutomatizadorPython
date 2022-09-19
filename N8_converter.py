@@ -10,6 +10,7 @@ class N8Converter(URAReportConverterInterface):
         # self.writer.sort_activation_data()
         self.writer.set_activation_styles()
         self.writer.set_call_interaction_styles()
+        self.write_csv(report.call_interaction_file)
         self.writer.save()
 
 
@@ -102,4 +103,23 @@ class N8Converter(URAReportConverterInterface):
 
                     self.writer.write_call_interaction_message([*[number], *[date], *row[30:]])
                 
-                    
+    def write_csv(self, call_interaction_file_name):
+        f = open("teste.csv", "w", newline="")
+        with open(call_interaction_file_name) as csvfile:
+            _reader = csv.reader(csvfile, delimiter=';')
+            # self.writer.create_call_interaction_sheet()
+            fixed_values = []
+            for i, row in enumerate(_reader):                 
+                
+                if i == 0:
+                    number = "telefone"
+                    date = row[0]
+                    writer = csv.writer(f)
+                    writer.writerow([number, date, *row[30:]])
+                if '' in row[0][:] and row[12] == 'Atendido' and row[30] != '':
+                    number = self.fix_number(row[6])
+                    date = self.fix_date(row[0])
+                    writer = csv.writer(f)
+                    writer.writerow([number, date, *row[30:]])
+            
+            f.close()

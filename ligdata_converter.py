@@ -42,8 +42,3 @@ class LigdataConverter(ReportConverterInterface):
             self.writer.write_received_message(self.fix_number(str(p)), m)
 
     
-    def convert_rcs_report(self, sent_file_name, received_file_name, interaction_file_name):
-        pass
-
-    def convert_ura_report(self, activation_file_name, call_interaction_file_name):
-        pass
