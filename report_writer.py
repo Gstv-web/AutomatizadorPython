@@ -24,17 +24,18 @@ class ReportWriter:
 
     def init_writer(self):
         self.workbook = Workbook()
-        # self.sent_sheet = self.workbook.active
-        # self.sent_sheet.title = ReportWriter.SENT_SHEET_NAME
-        # # self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
-        # self.received_sheet = self.workbook.create_sheet(ReportWriter.RECEIVED_SHEET_NAME)
+        self.sent_sheet = self.workbook.active
+        self.sent_sheet.title = ReportWriter.SENT_SHEET_NAME
+        # self.sent_sheet = self.workbook.create_sheet(ReportWriter.SENT_SHEET_NAME)
+        self.received_sheet = self.workbook.create_sheet(ReportWriter.RECEIVED_SHEET_NAME)
         # self.insert_sent_header()
         # self.insert_received_header()
         # self.set_styles()
-        self.activation_sheet = self.workbook.active
-        self.activation_sheet.title = ReportWriter.ACTIVATION_SHEET_NAME
-        self.call_interaction_sheet = self.workbook.create_sheet(ReportWriter.CALL_INTERACTION_SHEET_NAME)
-        self.insert_activation_header()
+
+        # self.activation_sheet = self.workbook.active
+        # self.activation_sheet.title = ReportWriter.ACTIVATION_SHEET_NAME
+        # self.call_interaction_sheet = self.workbook.create_sheet(ReportWriter.CALL_INTERACTION_SHEET_NAME)
+        # self.insert_activation_header()
 
 
         
@@ -122,13 +123,18 @@ class ReportWriter:
             for cell in row:
                 cell.alignment = Alignment(horizontal='center')
                 cell.border = thin_border
-        for col in self.call_interaction_sheet.iter_cols(min_col=4):
+        for col in self.call_interaction_sheet.iter_cols(min_col=3):
             for cell in col:
-                if cell.value == '':
+                if cell.value == '' or cell.value == None:
                     new_val = '-'
                     cell.value = new_val
                     
-
+    def insert_interaction_headers(self):
+        i = 1
+        for col in self.call_interaction_sheet.iter_cols(min_col=3, min_row=1, max_row=1):
+            for cell in col:
+                cell.value = f"P{i}"
+                i += 1
 
     # def set_interaction_styles(self):
     #     for rows in self.interaction_sheet.iter_cols(min_row=1, min_col=1):
@@ -187,7 +193,7 @@ class ReportWriter:
            
 
     def write_call_interaction_message(self, values):
-        self.call_interaction_sheet.append([values])
+        self.call_interaction_sheet.append(values)
 
     def insert_sent_header(self):
         self.sent_sheet.insert_rows(0)

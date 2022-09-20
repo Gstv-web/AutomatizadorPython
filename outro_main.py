@@ -5,6 +5,7 @@ import os.path
 from report import Report
 from rcs_report import RCSReport
 from ura_report import URAReport
+from sms_report import SMSReport
 from iknow_converter import IknowConverter
 from iknow_rcs_converter import IknowRCSConverter
 from alcance_converter import AlcanceConverter
@@ -15,6 +16,7 @@ from N8_converter import N8Converter
 from talkip_converter import TalkipConverter
 from talk_converter import TalkConverter
 from report_writer import ReportWriter
+from bewake_sms_converter import BewakeSMSConverter
 
 def find_next_pending_report():
     """
@@ -39,8 +41,8 @@ def find_next_pending_report():
     # pending_report = Report(sent_file, received_file, Report.SUPPLIER_LIGDATA)
 
     ### BEWAKE ###
-    # sent_file = os.path.join("Entrada", "Bewake", "16.08 - Jeep.csv")
-    # received_file = os.path.join("Entrada", "Bewake", "16.08 - Jeep.csv")
+    # sent_file = os.path.join("Entrada", "Bewake", "Whatsapp" "16.08 - Jeep.csv")
+    # received_file = os.path.join("Entrada", "Bewake", "Whatsapp", "16.08 - Jeep.csv")
     # pending_report = Report(sent_file, received_file, Report.SUPPLIER_BEWAKE)
     
     ### ATMOSFERA ###
@@ -65,25 +67,31 @@ def find_next_pending_report():
     # pending_report = URAReport(activation_file, call_interaction_file, URAReport.SUPPLIER_TALKIP)
 
     ### Talk (URA) ###
-    activation_file = os.path.join("Entrada", "Talk", "Talk - URA.xls")
-    call_interaction_file = os.path.join("Entrada", "Talk", "Talk - URA.xls")
-    pending_report = URAReport(activation_file, call_interaction_file, URAReport.SUPPLIER_TALK)
+    # activation_file = os.path.join("Entrada", "Talk", "Talk - URA.xls")
+    # call_interaction_file = os.path.join("Entrada", "Talk", "Talk - URA.xls")
+    # pending_report = URAReport(activation_file, call_interaction_file, URAReport.SUPPLIER_TALK)
+
+    ### Bewake (SMS) ###
+    sent_file = os.path.join("Entrada", "Bewake", "SMS", "SMS - Bewake.csv")
+    received_file = os.path.join("Entrada", "Bewake", "SMS", "SMS - Bewake.csv")
+    pending_report = SMSReport(sent_file, received_file, SMSReport.SUPPLIER_BEWAKE)
 
     return pending_report
 
 
-def update_report_file(pending_report: URAReport):
+def update_report_file(pending_report: SMSReport):
     # writer = ReportWriter("./Saida/iKnow/Whatsapp/finalizado.xlsx") # iKnow
     # writer = ReportWriter("./Saida/Alcance/finalizado.xlsx") # Alcance
     # writer = ReportWriter("./Saida/Ligdata/finalizado.xlsx") # Ligdata
-    # writer = ReportWriter("./Saida/Bewake/finalizado.xlsx") # Bewake
+    # writer = ReportWriter("./Saida/Bewake/Whatsapp/finalizado.xlsx") # Bewake
     # writer = ReportWriter("./Saida/Atmosfera/finalizado.xlsx") # Atmosfera
     # writer = ReportWriter("./Saida/iKnow/RCS/finalizado.xlsx") # iKnow RCS
     # writer = ReportWriter("./Saida/N8/finalizado.xlsx") # N8 (URA)
     # writer = ReportWriter("./Saida/Talkip/finalizado.xlsx") # Talkip (URA)
-    writer = ReportWriter("./Saida/Talk/finalizado.xlsx") # Talk (URA)
+    # writer = ReportWriter("./Saida/Talk/finalizado.xlsx") # Talk (URA)
+    writer = ReportWriter("./Saida/Bewake/SMS/finalizado.xlsx") # Bewake (SMS)
 
-    if pending_report.supplier == URAReport.SUPPLIER_TALK:
+    if pending_report.supplier == SMSReport.SUPPLIER_BEWAKE:
         # ic = IknowConverter(writer)
         # ic.convert_report(pending_report)
 
@@ -108,8 +116,11 @@ def update_report_file(pending_report: URAReport):
         # tkp = TalkipConverter(writer)
         # tkp.convert_ura_report(pending_report)
 
-        tk = TalkConverter(writer)
-        tk.convert_ura_report(pending_report)
+        # tk = TalkConverter(writer)
+        # tk.convert_ura_report(pending_report)
+
+        bsms = BewakeSMSConverter(writer)
+        bsms.convert_sms_report(pending_report)
 
 def main():
     pending_report = find_next_pending_report()

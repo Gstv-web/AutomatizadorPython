@@ -8,6 +8,10 @@ class TalkConverter(URAReportConverterInterface):
     def convert_ura_report(self, report: URAReport):
         self.cast_activation_report(report.activation_file)
         self.cast_call_interaction_report(report.call_interaction_file)
+        self.writer.set_activation_styles()
+        self.writer.insert_interaction_headers()
+        self.writer.set_call_interaction_styles()
+        # self.writer.remove_blacklist_numbers()
         self.writer.save()
 
 
@@ -43,9 +47,46 @@ class TalkConverter(URAReportConverterInterface):
             for s in col_status:
                 status.append(s.firstChild.data)
 
-            for n, d, dr, s in zip(num, date, duration, status):
-                self.writer.write_activation_message([n, d, dr, s])
+            atendida = []
+            nao_atendida = []
+            ocupada = []
+            servico = []
+            congestionamento = []
 
+            for n, d, dr, s in zip(num, date, duration, status):
+                if s == "Atendida":
+                    atendida.append([n, d, dr, s])
+
+            for n, d, dr, s in zip(num, date, duration, status):
+                if s == "Não Atendida":
+                    nao_atendida.append([n, d, dr, s])
+
+            for n, d, dr, s in zip(num, date, duration, status):
+                if s == "Ocupada":
+                    ocupada.append([n, d, dr, s])
+
+            for n, d, dr, s in zip(num, date, duration, status):
+                if s == "Serviço":
+                    servico.append([n, d, dr, s])
+
+            for n, d, dr, s in zip(num, date, duration, status):
+                if s == "Congestionamento":
+                    congestionamento.append([n, d, dr, s])
+    
+            for i in range(len(atendida)):
+                self.writer.write_activation_message(atendida[i])
+
+            for i in range(len(nao_atendida)):
+                self.writer.write_activation_message(nao_atendida[i])
+
+            for i in range(len(ocupada)):
+                self.writer.write_activation_message(ocupada[i])
+
+            for i in range(len(servico)):
+                self.writer.write_activation_message(servico[i])
+
+            for i in range(len(congestionamento)):
+                self.writer.write_activation_message(congestionamento[i])
 
     def cast_call_interaction_report(self, call_interaction_file_name):
         with open(call_interaction_file_name, 'r', encoding='utf-8') as f:
@@ -75,29 +116,13 @@ class TalkConverter(URAReportConverterInterface):
                 if tag.firstChild == None:
                     new_tag = ""
                     interaction.append(new_tag)
-                else:
-                    interaction.append(str(tag.firstChild.data))
+                elif "-" in tag.firstChild.data:
+                    new_tag = tag.firstChild.data.replace("-", "")
+                    if len(new_tag) > 1:
+                        interaction.append(list(new_tag))
 
-            for i, data in enumerate(interaction):
-                # digito[i].replace("-", "")
-                if "-" in interaction[i]:
-                    new_digito = interaction[i].replace("-", "").replace(" ","")
-                    interaction[i] = list(new_digito)
-
-            
-            final = []
-            interaction_split = []
-
-            for data in interaction:
-                length = len(data)
-                max_length = 0
-                if length > max_length:
-                    max_length = length
             
 
             for p, d, i in zip(num, date, interaction):
-                final.append([p, d, i])
+                self.writer.write_call_interaction_message([p, d, *i])
               
-
-            for i in range(len(final)):
-                self.writer.write_call_interaction_message(str(final[i]))

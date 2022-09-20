@@ -37,10 +37,3 @@ class BewakeConverter(ReportConverterInterface):
                         pass
                     else:
                         self.writer.write_received_message(numero, resposta)
-
-
-    def convert_rcs_report(self, sent_file_name, received_file_name, interaction_file_name):
-        pass
-
-    def convert_ura_report(self, activation_file_name, call_interaction_file_name):
-        pass
