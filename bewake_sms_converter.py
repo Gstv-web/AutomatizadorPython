@@ -11,6 +11,7 @@ class BewakeSMSConverter(SMSReportConverterInterface):
         self.writer.insert_sent_header()
         self.writer.insert_received_header()
         self.writer.set_styles()
+        self.writer.remove_blacklist_numbers()
         self.writer.save()
 
     def cast_sent_report(self, sent_file_name):

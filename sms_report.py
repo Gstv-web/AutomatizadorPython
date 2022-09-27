@@ -2,6 +2,7 @@
 class SMSReport:
 
     SUPPLIER_BEWAKE = "bewake"
+    SUPPLIER_TALK = "talk"
 
     def __init__(self, sent_file, received_file, supplier):
         self._supplier = supplier

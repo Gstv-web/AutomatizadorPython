@@ -30,7 +30,7 @@ class ReportWriter:
         self.received_sheet = self.workbook.create_sheet(ReportWriter.RECEIVED_SHEET_NAME)
         # self.insert_sent_header()
         # self.insert_received_header()
-        # self.set_styles()
+        #self.set_styles()
 
         # self.activation_sheet = self.workbook.active
         # self.activation_sheet.title = ReportWriter.ACTIVATION_SHEET_NAME
@@ -260,6 +260,20 @@ class ReportWriter:
                 if cell.value in blacklist:
                     self.sent_sheet.delete_rows(cell.row)
         
+    def remove_blacklist_numbers_ura(self):
+        blacklist = ['71983155252', '62993984240', '11986884500',
+                     '21997610334', '62985553937', '11997399665',
+                     '47999905666', '11967243506', '11939390655',
+                     '89988169173', '11995458123', '41996166105',
+                     '11996384589', '71991810512', '47999474163',
+                     '11977826644', '11997965365', '11980831080',
+                     '11982026091', '11995556294', '71991770338',
+                     '11996869475']
+            
+        for col in self.activation_sheet.iter_cols(min_row=2, min_col=1, max_col=1):
+            for cell in col:
+                if cell.value in blacklist:
+                    self.activation_sheet.delete_rows(cell.row)    
 
     def remove_blank_messages(self):
         for col in self.received_sheet.iter_cols(min_row=2, min_col=2, max_col=2):

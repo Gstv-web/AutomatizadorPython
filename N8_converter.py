@@ -10,6 +10,7 @@ class N8Converter(URAReportConverterInterface):
         # self.writer.sort_activation_data()
         self.writer.set_activation_styles()
         self.writer.set_call_interaction_styles()
+        self.writer.remove_blacklist_numbers_ura()
         self.write_csv(report.call_interaction_file)
         self.writer.save()
 
